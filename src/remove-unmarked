@@ -1,0 +1,5 @@
+#!/bin/bash
+# removes all files not containing "marked-" in their name in the current directory
+# used for easier cleanup after watermarking the images
+shopt -s extglob
+rm !(marked-*)

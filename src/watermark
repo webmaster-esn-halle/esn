@@ -1,0 +1,67 @@
+#!/bin/bash
+# applies a watermark to all jpg, JPG and png files in the directory containing this script
+# watermark is applied in bottom right corner
+# works with images of orientation 1 (topleft), 6 (RightTop) and 8 (LeftBottom)
+# other orientations can be added by adding the case to the if statement in the loop for each file type
+# and changing the rotation and gravity in the convert command (which rotate the watermark and assign the corner in which the watermark is applied)
+
+#how to run:
+# 	- make the script executable: sudo chmod +x watermark
+#	- run the script: ./watermark
+
+# set the path to the watermark
+watermark="/home/tim/esn/img/DE-halle_saale-logo-white.png"
+
+#jpg files
+for pic in *.jpg; do
+	if [ "$pic" = "*.jpg" ]; then
+		echo "No .jpg files were found.";
+		break
+	fi;
+	if [ $(identify -format '%[orientation]' $pic) = 8 ] || [ $(identify -format '%[orientation]' $pic) = "LeftBottom" ]
+	then
+		convert $pic \( $watermark -background none -rotate 90 \) +distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.15):s.w],%[fx:t?v.h*(u.h/v.h*0.15):s.h]" -shave 1 -gravity southwest -geometry +20+20 -composite marked-${pic//.jpg}.jpg
+	elif [ $(identify -format '%[orientation]' $pic) = 6 ] || [ $(identify -format '%[orientation]' $pic) = "RightTop" ]
+	then 
+		convert $pic \( $watermark -background none -rotate 270 \) +distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.15):s.w],%[fx:t?v.h*(u.h/v.h*0.15):s.h]" -shave 1 -gravity northeast -geometry +20+20 -composite marked-${pic//.jpg}.jpg
+	else
+	convert $pic $watermark +distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.1):s.w],%[fx:t?v.h*(u.h/v.h*0.1):s.h]" -shave 1 -gravity southeast -geometry +20+20 -composite marked-${pic//.jpg}.jpg;
+	fi;
+	echo "${pic} done!";
+done;
+
+# JPG files
+for pic in *.JPG; do
+	if [ "$pic" = "*.JPG" ]; then
+		echo "No .JPG files were found.";
+		break
+	fi;
+	if [ $(identify -format '%[orientation]' $pic) = 8 ] || [ $(identify -format '%[orientation]' $pic) = "LeftBottom" ]
+        then
+                convert $pic \( $watermark -background none -rotate 90 \) +distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.15):s.w],%[fx:t?v.h*(u.h/v.h*0.15):s.h]" -shave 1 -gravity southwest -geometry +20+20 -composite marked-${pic//.JPG}.jpg
+        elif [ $(identify -format '%[orientation]' $pic) = 6 ] || [ $(identify -format '%[orientation]' $pic) = "RightTop" ]
+        then
+                convert $pic \( $watermark -background none -rotate 270 \) +distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.15):s.w],%[fx:t?v.h*(u.h/v.h*0.15):s.h]" -shave 1 -gravity northeast -geometry +20+20 -composite marked-${pic//.JPG}.jpg
+        else
+	convert $pic $watermark +distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.1):s.w],%[fx:t?v.h*(u.h/v.h*0.1):s.h]" -shave 1 -gravity southeast -geometry +20+20 -composite marked-${pic//.JPG}.jpg;
+	fi;
+	echo "${pic} done!";
+done;
+
+# png files
+for pic in *.png; do
+	if [ "$pic" != $watermark ]  && [ "$pic" != "*.png" ]; then
+		if [ $(identify -format '%[orientation]' $pic) = 8 ] || [ $(identify -format '%[orientation]' $pic) = "LeftBottom" ]
+        then
+                convert $pic \( $watermark -background none -rotate 90 \) +distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.15):s.w],%[fx:t?v.h*(u.h/v.h*0.15):s.h]" -shave 1 -gravity southwest -geometry +20+20 -composite marked-${pic//.png}.jpg
+        elif [ $(identify -format '%[orientation]' $pic) = 6 ] || [ $(identify -format '%[orientation]' $pic) = "RightTop" ]
+        then
+                convert $pic \( $watermark -background none -rotate 270 \) +distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.15):s.w],%[fx:t?v.h*(u.h/v.h*0.15):s.h]" -shave 1 -gravity northeast -geometry +20+20 -composite marked-${pic//.png}.jpg
+        else
+		convert $pic $watermark +distort affine "0,0 0,0 %[w],%[h] %[fx:t?v.w*(u.h/v.h*0.1):s.w],%[fx:t?v.h*(u.h/v.h*0.1):s.h]" -shave 1 -gravity southeast -geometry +20+20 -composite marked-${pic//.png}.jpg;
+		fi;
+		echo "${pic} done!";
+	else
+		echo "The watermark was skipped."
+	fi;
+done
