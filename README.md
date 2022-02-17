@@ -8,6 +8,7 @@ directory containing the written scripts and other source files
     * use the `autocolor_all.py` script to enhance images
 * `autocolor_all.py`
     * script that enhances the image quality of all images in a given directory
+    * standard image extensions that are processed: png, PNG, jpg, JPG, jpeg
     * needs the `autocolor` script to work properly
     * to get further help call `python3 autocolor_all.py -h`
 * `watermark`
@@ -20,4 +21,16 @@ directory containing the written scripts and other source files
     * if nor executable run `sudo chmod +x remove-unmarked` first
 
 ## img 
-directory containing images used by the scripts
+directory containing images used by the scripts, e.g. the watermark
+
+## example workflow
+* download folder of unprocessed images
+* process images
+    * script can be run like `python3 autocolor_all.py -p "path to directory for processed images" -i "path to folder containing unprocessed images" -a "path to autocolor script" (-e extension1 extension2 extension3 ...)`
+    * example (with extension list): `python3 autocolor.py -p "~/esn" -i "~/images/event_x" -a "~/scripts/autocolor" -e png jpg JPG PNG`
+    * example (without extension list): `python3 autocolor.py -p "~/esn" -i "~/images/event_x" -a "~/scripts/autocolor"`
+* watermark the processed images
+    * execute the `watermark` script in the directory containing the processed images: `./watermark`
+* clean up the directory conatining the processed and watermarked images
+    * e.g. execute `./remove-unmarked` to remove ALL files not containing "marked-" in their file name
+* upload folder containing processed and watermarked images
